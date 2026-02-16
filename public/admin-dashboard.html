@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – Easy 2 Work</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="/">Easy 2 Work</a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><span class="nav-link d-none d-md-inline text-white-50">Admin</span></li>
+        <li class="nav-item"><a class="nav-link" href="#" id="adminLogout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container dashboard-wrap">
+    <h1 class="dash-page-title animate-fade-in-up">Admin Dashboard</h1>
+    <p class="dash-page-sub animate-fade-in-up">View all data and manage users, engineers & complaints.</p>
+
+    <ul class="nav nav-tabs mb-4 animate-fade-in-up" id="adminTabs" role="tablist">
+      <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#management">Overview</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#complaints">Complaints</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#engineers">Engineers</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#users">Users</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="management">
+        <div class="card card-dash">
+          <div class="card-header"><span class="icon-wrap">📊</span> Overview</div>
+          <div class="card-body">
+            <div id="statsBox" class="row g-3">Loading...</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="complaints">
+        <div class="card card-dash">
+          <div class="card-header"><span class="icon-wrap">📋</span> All Complaints</div>
+          <div class="card-body p-0">
+            <div id="complaintsTable">Loading...</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="engineers">
+        <div class="card card-dash mb-4">
+          <div class="card-header"><span class="icon-wrap">➕</span> Add Engineer</div>
+          <div class="card-body">
+            <div id="engMsg"></div>
+            <form id="addEngineerForm" class="row g-3">
+              <div class="col-md-4"><label class="form-label">Name</label><input type="text" class="form-control" name="name" required placeholder="Full name"></div>
+              <div class="col-md-4"><label class="form-label">Email</label><input type="email" class="form-control" name="email" required placeholder="email@example.com"></div>
+              <div class="col-md-4"><label class="form-label">Phone</label><input type="text" class="form-control" name="phone" required placeholder="Phone number"></div>
+              <div class="col-md-4"><label class="form-label">Area</label><input type="text" class="form-control" name="area" placeholder="e.g. Varanasi"></div>
+              <div class="col-md-4"><label class="form-label">Specialization</label><input type="text" class="form-control" name="specialization" placeholder="e.g. AC, Electrical"></div>
+              <div class="col-md-4"><label class="form-label">Password</label><input type="password" class="form-control" name="password" required placeholder="Login password"></div>
+              <div class="col-12"><button type="submit" class="btn btn-primary px-4">Add Engineer</button></div>
+            </form>
+          </div>
+        </div>
+        <div class="card card-dash">
+          <div class="card-header"><span class="icon-wrap">👷</span> Engineers List</div>
+          <div class="card-body p-0">
+            <div id="engineersList">Loading...</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="users">
+        <div class="card card-dash">
+          <div class="card-header"><span class="icon-wrap">👥</span> Registered Users</div>
+          <div class="card-body p-0">
+            <div id="usersList">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const statusClass = s => s === 'Completed' ? 'badge-completed' : s === 'In Progress' ? 'badge-progress' : s === 'Assigned' ? 'badge-assigned' : s === 'Approved' ? 'badge-progress' : 'badge-pending';
+    const emptyTable = (icon, msg) => '<div class="empty-state"><div class="empty-icon">' + icon + '</div><p>' + msg + '</p></div>';
+
+    async function loadStats() {
+      const res = await fetch('/api/admin/stats', { credentials: 'include' });
+      if (res.status === 401) { window.location.href = '/admin-login.html'; return; }
+      const s = await res.json();
+      document.getElementById('statsBox').innerHTML =
+        '<div class="col-md-4"><div class="stat-card users"><div class="stat-num">' + s.users + '</div><div class="stat-label">Users</div></div></div>' +
+        '<div class="col-md-4"><div class="stat-card engineers"><div class="stat-num">' + s.engineers + '</div><div class="stat-label">Engineers</div></div></div>' +
+        '<div class="col-md-4"><div class="stat-card complaints"><div class="stat-num">' + s.complaints + '</div><div class="stat-label">Total Complaints</div></div></div>' +
+        '<div class="col-md-4"><div class="stat-card pending"><div class="stat-num">' + s.pending + '</div><div class="stat-label">Pending</div></div></div>' +
+        '<div class="col-md-4"><div class="stat-card approved"><div class="stat-num">' + s.approved + '</div><div class="stat-label">Approved</div></div></div>' +
+        '<div class="col-md-4"><div class="stat-card completed"><div class="stat-num">' + s.completed + '</div><div class="stat-label">Completed</div></div></div>';
+    }
+
+    async function loadComplaints() {
+      const res = await fetch('/api/admin/complaints', { credentials: 'include' });
+      if (res.status === 401) { window.location.href = '/admin-login.html'; return; }
+      const list = await res.json();
+      const html = list.length === 0 ? emptyTable('📋', 'No complaints yet.') :
+        '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>ID</th><th>User</th><th>Address</th><th>Service</th><th>Status</th><th>Engineer</th><th>Action</th></tr></thead><tbody>' +
+        list.map(c => '<tr><td><strong>#' + c.id + '</strong></td><td>' + c.user_name + '<br><small class="text-muted">' + c.user_phone + '</small></td><td>' + (c.user_address || '–') + '</td><td>' + c.service_type + '</td><td><span class="badge ' + statusClass(c.status) + '">' + c.status + '</span></td><td>' + (c.engineer_name || '–') + '</td><td><button class="btn btn-sm btn-danger delete-complaint" data-id="' + c.id + '">Delete</button></td></tr>').join('') +
+        '</tbody></table></div>';
+      document.getElementById('complaintsTable').innerHTML = html;
+      document.querySelectorAll('.delete-complaint').forEach(btn => btn.onclick = () => deleteComplaint(btn.dataset.id));
+    }
+    async function deleteComplaint(id) {
+      if (!confirm('Delete this complaint?')) return;
+      const res = await fetch('/api/admin/complaints/' + id, { method: 'DELETE', credentials: 'include' });
+      if (res.ok) { loadComplaints(); loadStats(); }
+    }
+
+    async function loadEngineers() {
+      const res = await fetch('/api/admin/engineers', { credentials: 'include' });
+      if (res.status === 401) return;
+      const list = await res.json();
+      document.getElementById('engineersList').innerHTML = list.length === 0 ? emptyTable('👷', 'No engineers. Add one above.') :
+        '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Area</th><th>Specialization</th><th>Action</th></tr></thead><tbody>' +
+        list.map(e => '<tr><td><strong>' + e.name + '</strong></td><td>' + e.email + '</td><td>' + e.phone + '</td><td>' + (e.area || '–') + '</td><td>' + (e.specialization || '–') + '</td><td><button class="btn btn-sm btn-danger delete-engineer" data-id="' + e.id + '">Delete</button></td></tr>').join('') + '</tbody></table></div>';
+      document.querySelectorAll('.delete-engineer').forEach(btn => btn.onclick = () => deleteEngineer(btn.dataset.id));
+    }
+    async function deleteEngineer(id) {
+      if (!confirm('Delete this engineer?')) return;
+      const res = await fetch('/api/admin/engineers/' + id, { method: 'DELETE', credentials: 'include' });
+      if (res.ok) { loadEngineers(); loadStats(); }
+    }
+
+    async function loadUsers() {
+      const res = await fetch('/api/admin/users', { credentials: 'include' });
+      if (res.status === 401) return;
+      const list = await res.json();
+      document.getElementById('usersList').innerHTML = list.length === 0 ? emptyTable('👥', 'No users yet.') :
+        '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Action</th></tr></thead><tbody>' +
+        list.map(u => '<tr><td><strong>' + u.name + '</strong></td><td>' + u.email + '</td><td>' + u.phone + '</td><td>' + (u.address || '–') + '</td><td><button class="btn btn-sm btn-danger delete-user" data-id="' + u.id + '">Delete</button></td></tr>').join('') + '</tbody></table></div>';
+      document.querySelectorAll('.delete-user').forEach(btn => btn.onclick = () => deleteUser(btn.dataset.id));
+    }
+    async function deleteUser(id) {
+      if (!confirm('Delete this user? Their complaints will also be deleted.')) return;
+      const res = await fetch('/api/admin/users/' + id, { method: 'DELETE', credentials: 'include' });
+      if (res.ok) { loadUsers(); loadStats(); }
+    }
+
+    document.getElementById('addEngineerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const body = new URLSearchParams(new FormData(e.target));
+      const res = await fetch('/api/admin/engineers', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString(), credentials: 'include' });
+      const data = await res.json().catch(() => ({}));
+      const msg = document.getElementById('engMsg');
+      if (res.ok) { msg.innerHTML = '<div class="alert alert-success">Engineer added successfully.</div>'; e.target.reset(); loadEngineers(); loadStats(); }
+      else { msg.innerHTML = '<div class="alert alert-danger">' + (data.error || 'Failed') + '</div>'; }
+    };
+    document.getElementById('adminLogout').onclick = async (e) => {
+      e.preventDefault();
+      await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+      window.location.href = '/';
+    };
+    loadStats();
+    loadComplaints();
+    loadEngineers();
+    loadUsers();
+  </script>
+</body>
+</html>
