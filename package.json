@@ -1,16 +1,1 @@
-{
-  "name": "easy-2-work",
-  "version": "1.0.0",
-  "description": "On-Demand Home Service - Complaint management for electrical, AC, cooler, appliance repair",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^11.6.0",
-    "express": "^4.21.0",
-    "express-session": "^1.18.0"
-  }
-}
+
