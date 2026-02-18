@@ -26,12 +26,12 @@ const requireUser = (req, res, next) => {
 const requireAdmin = (req, res, next) => {
   if (req.session.admin) return next();
   if (req.path.startsWith('/api/')) return res.status(401).json({ error: 'Admin login required' });
-  res.redirect('/admin-login.html');
+  res.redirect('/');
 };
 const requireEngineer = (req, res, next) => {
   if (req.session.engineer) return next();
   if (req.path.startsWith('/api/')) return res.status(401).json({ error: 'Engineer login required' });
-  res.redirect('/engineer-login.html');
+  res.redirect('/');
 };
 
 // ========== USER AUTH ==========
@@ -72,26 +72,6 @@ app.post('/login', (req, res) => {
   if (!user || !bcrypt.compareSync(password, user.password)) return res.redirect('/login.html?error=1');
   req.session.user = { id: user.id, name: user.name, email: user.email };
   res.redirect('/user-dashboard');
-});
-
-app.post('/admin-login', (req, res) => {
-  const email = (req.body && req.body.email || '').trim();
-  const password = req.body && req.body.password;
-  if (!email || !password) return res.redirect('/admin-login.html?error=1');
-  const admin = db.prepare('SELECT * FROM admin WHERE email = ?').get(email);
-  if (!admin || !bcrypt.compareSync(password, admin.password)) return res.redirect('/admin-login.html?error=1');
-  req.session.admin = { id: admin.id, email: admin.email };
-  res.redirect('/admin-dashboard');
-});
-
-app.post('/engineer-login', (req, res) => {
-  const email = (req.body && req.body.email || '').trim();
-  const password = req.body && req.body.password;
-  if (!email || !password) return res.redirect('/engineer-login.html?error=1');
-  const eng = db.prepare('SELECT * FROM engineers WHERE email = ?').get(email);
-  if (!eng || !bcrypt.compareSync(password, eng.password)) return res.redirect('/engineer-login.html?error=1');
-  req.session.engineer = { id: eng.id, name: eng.name, email: eng.email };
-  res.redirect('/engineer-dashboard');
 });
 
 // ========== ADMIN AUTH (API – keep for any future use) ==========
@@ -265,7 +245,5 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.ht
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
 app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'public', 'register.html')));
 app.get('/user-dashboard', requireUser, (req, res) => res.sendFile(path.join(__dirname, 'public', 'user-dashboard.html')));
-app.get('/admin-dashboard', requireAdmin, (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin-dashboard.html')));
-app.get('/engineer-dashboard', requireEngineer, (req, res) => res.sendFile(path.join(__dirname, 'public', 'engineer-dashboard.html')));
 
 app.listen(PORT, () => console.log(`Easy 2 Work server running at http://localhost:${PORT}`));
