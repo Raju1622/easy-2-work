@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enquiry – Easy 2 Work</title>
+  <base href="./">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    .enquiry-page { padding: 4rem 0 5rem; max-width: 560px; margin: 0 auto; }
+    .enquiry-page h1 { font-size: 1.75rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .enquiry-page .lead { color: #555; margin-bottom: 2rem; }
+    .enquiry-back { display: inline-block; margin-bottom: 1.25rem; color: var(--pronto-green, #0a5f38); text-decoration: none; font-weight: 500; }
+    .enquiry-back:hover { text-decoration: underline; }
+    .enquiry-page .form-label { font-weight: 500; }
+    .enquiry-page .btn-submit { background: var(--pronto-green, #0a5f38); color: #fff; font-weight: 600; padding: 0.6rem 1.5rem; border: none; }
+    .enquiry-page .btn-submit:hover { background: #084a2a; color: #fff; }
+    .enquiry-success { padding: 4rem 0 5rem; max-width: 560px; margin: 0 auto; text-align: center; }
+    .enquiry-success h2 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--pronto-green, #0a5f38); }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-pronto sticky-top">
+    <div class="navbar-pronto-outer">
+      <a class="navbar-pronto-mobile-brand d-lg-none" href="index.html">Easy 2 Work</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse navbar-pronto-pill-wrap" id="navMenu">
+        <div class="navbar-pronto-pill">
+          <a class="nav-link" href="index.html#why-us">Why us</a>
+          <a class="nav-link" href="index.html#services">Services</a>
+          <a class="navbar-brand navbar-pronto-brand" href="index.html">Easy 2 Work</a>
+          <a class="nav-link" href="index.html#how">How it works</a>
+          <a class="nav-link" href="index.html#faqs">FAQs</a>
+          <a class="nav-link" href="enquiry.html">Enquiry</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="enquiry-page container">
+    <a href="index.html" class="enquiry-back">&larr; Back to Home</a>
+    <h1>Enquiry</h1>
+    <p class="lead">Have a question or want to know more? Send us a message and we’ll get back to you.</p>
+
+    <form action="https://formsubmit.co/sadanandmaurya.rj@gmail.com" method="POST" id="enquiryForm">
+      <input type="hidden" name="_subject" value="Easy 2 Work – New Enquiry">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div class="mb-3">
+        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="name" name="name" required placeholder="Your name">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" class="form-control" id="email" name="email" required placeholder="your@email.com">
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="tel" class="form-control" id="phone" name="phone" placeholder="10-digit mobile number">
+      </div>
+      <div class="mb-3">
+        <label for="subject" class="form-label">Subject</label>
+        <input type="text" class="form-control" id="subject" name="subject" placeholder="e.g. Booking, Service question">
+      </div>
+      <div class="mb-4">
+        <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+        <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Your enquiry or message..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-submit">Send Enquiry</button>
+    </form>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row g-4 py-4">
+        <div class="col-md-6">
+          <h6 class="footer-heading">ABOUT</h6>
+          <ul class="footer-links">
+            <li><a href="index.html#why-us">Why Us</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#how">How It Works</a></li>
+            <li><a href="index.html#faqs">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h6 class="footer-heading">LEGAL</h6>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms &amp; Conditions</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="enquiry.html">Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom text-center">
+        <p class="mb-0">Easy 2 Work – On-Demand Home Service &copy; 2025</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function() {
+      var form = document.getElementById('enquiryForm');
+      if (form && form.querySelector('input[name="_next"]')) {
+        var path = window.location.pathname.replace(/\/[^/]*$/, '') || '';
+        if (!path.endsWith('/')) path += '/';
+        form.querySelector('input[name="_next"]').value = window.location.origin + path + 'index.html?enquiry=success';
+      }
+    })();
+  </script>
+</body>
+</html>
