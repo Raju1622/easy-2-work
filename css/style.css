@@ -241,7 +241,7 @@ body {
 
 /* Hero – India's quick Home Service (logo as bg) */
 .hero-pronto {
-  background: #000 url(/images/logo.png) center center no-repeat;
+  background: #000 url(../images/logo.png) center center no-repeat;
   background-size: cover;
   color: #fff;
   padding: 4rem 0 2rem;
