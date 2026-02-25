@@ -13,6 +13,8 @@ class BookingModel {
     required this.createdAt,
     this.status = BookingStatus.active,
     this.engineerPhone,
+    this.latitude,
+    this.longitude,
   });
 
   final String id;
@@ -23,7 +25,9 @@ class BookingModel {
   final String timeSlot;
   final DateTime createdAt;
   BookingStatus status;
-  final String? engineerPhone;
+  String? engineerPhone;
+  final double? latitude;
+  final double? longitude;
 
   String get serviceNames => items.map((e) => e.service.name).join(', ');
 
@@ -42,6 +46,8 @@ class BookingModel {
         'createdAt': createdAt.millisecondsSinceEpoch,
         'status': status.name,
         'engineerPhone': engineerPhone,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 
   static BookingModel fromJson(Map<String, dynamic> json) {
@@ -58,6 +64,8 @@ class BookingModel {
       }
     }
     final createdAt = json['createdAt'];
+    final lat = json['latitude'];
+    final lng = json['longitude'];
     return BookingModel(
       id: json['id'] as String? ?? '',
       items: items,
@@ -70,6 +78,8 @@ class BookingModel {
           : DateTime.now(),
       status: status,
       engineerPhone: json['engineerPhone'] as String?,
+      latitude: lat != null ? (lat as num).toDouble() : null,
+      longitude: lng != null ? (lng as num).toDouble() : null,
     );
   }
 }

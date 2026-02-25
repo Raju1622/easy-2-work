@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_theme.dart';
 import '../../core/models/booking_model.dart';
@@ -16,7 +17,8 @@ class TrackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const eta = '~15 mins';
-    final phone = booking?.engineerPhone ?? '+91 98765 43210';
+    final phone = booking?.engineerPhone;
+    final canCall = phone != null && phone.trim().isNotEmpty;
 
     return Scaffold(
       backgroundColor: AppTheme.bgLight,
@@ -130,35 +132,57 @@ class TrackScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      SnackBar(
-                        content: Text('Calling $phone'),
-                        behavior:
-                            SnackBarBehavior.floating,
-                        backgroundColor: AppTheme.primary,
+              if (canCall)
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final uri = Uri.parse('tel:$phone');
+                      try {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      } catch (_) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Could not open dialer'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.phone_rounded, size: 22),
+                    label: const Text('Call Engineer'),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppTheme.primary, width: 2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.phone_rounded,
-                      size: 22),
-                  label: const Text('Call Engineer'),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(
-                        color: AppTheme.primary,
-                        width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(14),
                     ),
                   ),
                 ),
-              ),
+              if (!canCall)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.textSecondary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline_rounded,
+                          size: 22, color: AppTheme.textSecondary),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Engineer will be assigned soon. Call option will appear once they accept.',
+                          style: AppTheme.captionStyle().copyWith(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (canCall) const SizedBox(height: 12),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,

@@ -39,7 +39,7 @@ class ConfirmBookingScreen extends StatelessWidget {
           if (cart.items.isEmpty) {
             return const Center(child: Text('Cart is empty'));
           }
-          final savedAddress = addressProvider.address;
+          final savedAddress = addressProvider.fullAddress;
           final hasAddress = addressProvider.hasAddress;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -187,6 +187,8 @@ class ConfirmBookingScreen extends StatelessWidget {
                                   address: savedAddress,
                                   date: dateStr,
                                   timeSlot: timeStr,
+                                  latitude: addressProvider.latitude,
+                                  longitude: addressProvider.longitude,
                                 ),
                               ),
                             );

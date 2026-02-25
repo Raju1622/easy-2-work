@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core/app_theme.dart';
 import '../core/models/booking_model.dart';
+import '../core/providers/auth_provider.dart';
 import '../core/providers/bookings_provider.dart';
 import '../core/providers/worker_jobs_provider.dart';
 import '../shared/widgets/gradient_app_bar.dart';
@@ -70,13 +71,16 @@ class WorkerJobsScreen extends StatelessWidget {
                 );
               }
               final b = available[index - 1];
+              final auth = context.read<AuthProvider>();
+              final bookings = context.read<BookingsProvider>();
               return _JobCard(
                 booking: b,
                 onAccept: () {
                   workerJobs.acceptJob(b.id);
+                  bookings.setEngineerPhone(b.id, auth.phone);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Job ${b.id} accepted'),
+                      content: Text('Job ${b.id} accepted – user can now call you'),
                       behavior: SnackBarBehavior.floating,
                       backgroundColor: AppTheme.success,
                     ),

@@ -76,4 +76,14 @@ class BookingsProvider with ChangeNotifier {
   void completeBooking(String id) {
     updateStatus(id, BookingStatus.completed);
   }
+
+  /// Jab worker job accept kare to uski phone booking par set hoti hai – user ko Call Engineer dikhe
+  void setEngineerPhone(String id, String phone) {
+    final index = _bookings.indexWhere((b) => b.id == id);
+    if (index >= 0) {
+      _bookings[index].engineerPhone = phone.trim().isEmpty ? null : phone.trim();
+      _saveToPrefs();
+      notifyListeners();
+    }
+  }
 }

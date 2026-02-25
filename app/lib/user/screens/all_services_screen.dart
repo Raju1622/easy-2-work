@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../core/models/service_model.dart';
 import '../../core/providers/cart_provider.dart';
-import '../../core/providers/nav_provider.dart';
 import '../../shared/widgets/gradient_app_bar.dart';
+import 'book_service_screen.dart';
 import 'service_detail_screen.dart';
 
 /// All Services – professional grid
@@ -23,34 +23,47 @@ class AllServicesScreen extends StatelessWidget {
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, __) {
-              if (cart.itemCount == 0) return const SizedBox.shrink();
               return Stack(
                 clipBehavior: Clip.none,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.shopping_cart_rounded),
-                    onPressed: () =>
-                        context.read<NavProvider>().setIndex(2),
-                  ),
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                        color: AppTheme.accent,
-                        shape: BoxShape.circle,
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const BookServiceScreen(),
                       ),
-                      child: Text(
-                        '${cart.itemCount}',
-                        style: const TextStyle(
+                    ),
+                    tooltip: 'Cart',
+                  ),
+                  if (cart.itemCount > 0)
+                    Positioned(
+                      right: 6,
+                      top: 6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${cart.itemCount}',
+                          style: TextStyle(
+                            color: AppTheme.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               );
             },
@@ -62,7 +75,7 @@ class AllServicesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,25 +83,23 @@ class AllServicesScreen extends StatelessWidget {
                     'All services',
                     style: AppTheme.headingStyle().copyWith(fontSize: 22),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Text(
                     'Select a service — view pricing and add to cart',
-                    style:
-                        AppTheme.captionStyle().copyWith(fontSize: 13),
+                    style: AppTheme.captionStyle().copyWith(fontSize: 13),
                   ),
                 ],
               ),
             ),
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 gridDelegate:
                     const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 0.88,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
                 ),
                 itemCount: allServices.length,
                 itemBuilder: (context, index) {

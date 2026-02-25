@@ -30,8 +30,8 @@ class GradientAppBar extends StatelessWidget
           color: AppTheme.bgCard,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 12,
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
               offset: const Offset(0, 2),
             ),
           ],
@@ -39,15 +39,16 @@ class GradientAppBar extends StatelessWidget
         child: AppBar(
           title: Text(
             title,
-            style:
-                AppTheme.subheadingStyle().copyWith(fontSize: 18),
+            style: AppTheme.subheadingStyle().copyWith(fontSize: 18),
           ),
           centerTitle: centerTitle,
           backgroundColor: Colors.transparent,
           elevation: 0,
+          scrolledUnderElevation: 0,
           foregroundColor: AppTheme.textPrimary,
-          iconTheme:
-              const IconThemeData(color: AppTheme.textPrimary),
+          surfaceTintColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: AppTheme.textPrimary, size: 22),
+          actionsIconTheme: const IconThemeData(color: AppTheme.textPrimary, size: 24),
           actions: actions,
         ),
       );
@@ -71,13 +72,15 @@ class GradientAppBar extends StatelessWidget
             fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.w600,
+            letterSpacing: -0.3,
           ),
         ),
         centerTitle: centerTitle,
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white, size: 22),
+        actionsIconTheme: const IconThemeData(color: Colors.white, size: 24),
         actions: actions,
       ),
     );

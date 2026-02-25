@@ -23,7 +23,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.bgLight,
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Your Cart',
         style: AppBarStyle.white,
       ),
@@ -32,46 +32,47 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
           if (cart.items.isEmpty) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(40),
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(28),
+                      padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.06),
+                        color: AppTheme.primary.withOpacity(0.08),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.shopping_bag_outlined,
-                        size: 56,
-                        color: AppTheme.primary.withOpacity(0.5),
+                        size: 60,
+                        color: AppTheme.primary.withOpacity(0.6),
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 32),
                     Text(
                       'Your cart is empty',
-                      style:
-                          AppTheme.headingStyle().copyWith(fontSize: 20),
+                      style: AppTheme.headingStyle().copyWith(fontSize: 22),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Text(
                       'Add services from Home or Services to get started',
                       style: AppTheme.bodyStyle().copyWith(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 36),
+                    const SizedBox(height: 40),
                     SizedBox(
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () =>
-                            context.read<NavProvider>().setIndex(1),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.read<NavProvider>().setIndex(1);
+                        },
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(
                               color: AppTheme.primary, width: 1.5),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                AppTheme.radiusMd),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                           ),
                         ),
                         child: Text(

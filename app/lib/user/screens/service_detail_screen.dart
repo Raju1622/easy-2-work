@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../core/models/service_model.dart';
 import '../../core/providers/cart_provider.dart';
-import '../../core/providers/nav_provider.dart';
+import 'book_service_screen.dart';
 
 /// Full-page service detail: description, what's included, starting price, Add to cart
 class ServiceDetailScreen extends StatelessWidget {
@@ -22,9 +22,11 @@ class ServiceDetailScreen extends StatelessWidget {
           style: AppTheme.subheadingStyle().copyWith(fontSize: 18),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.bgCard,
         elevation: 0,
+        scrolledUnderElevation: 1,
         foregroundColor: AppTheme.textPrimary,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => Navigator.pop(context),
@@ -130,8 +132,12 @@ class ServiceDetailScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   context.read<CartProvider>().addToCart(service);
-                  context.read<NavProvider>().setIndex(2);
                   Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const BookServiceScreen(),
+                    ),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(

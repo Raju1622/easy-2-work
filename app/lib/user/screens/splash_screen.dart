@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/app_theme.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/providers/nav_provider.dart';
 import 'login_screen.dart';
 import 'main_shell.dart';
 import 'onboarding_screen.dart';
@@ -31,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final roleIndex = prefs.getInt(AuthProvider.keyRole);
     if (roleIndex != null && roleIndex >= 0 && roleIndex < AuthRole.values.length) {
       final role = AuthRole.values[roleIndex];
+      context.read<NavProvider>().setIndex(0);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => role == AuthRole.user

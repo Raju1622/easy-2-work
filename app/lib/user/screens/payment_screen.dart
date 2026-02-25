@@ -16,11 +16,15 @@ class PaymentScreen extends StatefulWidget {
     required this.address,
     required this.date,
     required this.timeSlot,
+    this.latitude,
+    this.longitude,
   });
 
   final String address;
   final String date;
   final String timeSlot;
+  final double? latitude;
+  final double? longitude;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -44,7 +48,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       date: widget.date,
       timeSlot: widget.timeSlot,
       createdAt: DateTime.now(),
-      engineerPhone: '+91 98765 43210',
+      engineerPhone: null,
+      latitude: widget.latitude,
+      longitude: widget.longitude,
     );
     bookings.addBooking(booking);
     cart.clearCart();

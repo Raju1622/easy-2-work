@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/providers/nav_provider.dart';
 import 'main_shell.dart';
 import '../../worker/worker_shell.dart';
 
@@ -48,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     await context.read<AuthProvider>().login(_selectedRole!, phone);
     if (!mounted) return;
+    // User → Home (tab 0), Worker → Jobs (tab 0)
+    context.read<NavProvider>().setIndex(0);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => _selectedRole == AuthRole.user

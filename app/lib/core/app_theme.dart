@@ -23,6 +23,16 @@ class AppTheme {
   static const double radiusLg = 20;
   static const double radiusXl = 24;
 
+  // Spacing scale (professional consistency)
+  static const double space4 = 4;
+  static const double space8 = 8;
+  static const double space12 = 12;
+  static const double space16 = 16;
+  static const double space20 = 20;
+  static const double space24 = 24;
+  static const double space28 = 28;
+  static const double space32 = 32;
+
   static LinearGradient get primaryGradient => const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -109,6 +119,20 @@ class AppTheme {
             color: Colors.black.withOpacity(0.03),
             blurRadius: 32,
             offset: const Offset(0, 8),
+          ),
+        ],
+      );
+
+  /// Professional list tile / section container
+  static BoxDecoration sectionCard() => BoxDecoration(
+        color: bgCard,
+        borderRadius: BorderRadius.circular(radiusMd),
+        border: Border.all(color: border, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       );

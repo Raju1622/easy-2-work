@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_theme.dart';
 import '../../core/models/booking_model.dart';
@@ -179,18 +180,45 @@ class _BookingList extends StatelessWidget {
                       style: AppTheme.captionStyle(),
                     ),
                     if (showTrack &&
-                        b.status ==
-                            BookingStatus.active) ...[
+                        b.status == BookingStatus.active) ...[
                       const SizedBox(height: 12),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton.icon(
-                          onPressed: () => onTap!(b),
-                          icon: const Icon(
-                              Icons.location_on_rounded,
-                              size: 18),
-                          label: const Text('Track'),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (b.engineerPhone != null &&
+                              b.engineerPhone!.trim().isNotEmpty) ...[
+                            TextButton.icon(
+                              onPressed: () async {
+                                final uri = Uri.parse('tel:${b.engineerPhone}');
+                                try {
+                                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                } catch (_) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Could not open dialer'),
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.phone_rounded, size: 18),
+                              label: const Text('Call Engineer'),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppTheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          TextButton.icon(
+                            onPressed: () => onTap!(b),
+                            icon: const Icon(Icons.location_on_rounded, size: 18),
+                            label: const Text('Track'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppTheme.primary,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ],

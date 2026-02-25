@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../core/app_theme.dart';
 import '../core/models/booking_model.dart';
@@ -210,13 +211,33 @@ class _MyJobCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Navigate to address – map integration can be added'),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
+                  onPressed: () async {
+                    final hasCoords = booking.latitude != null && booking.longitude != null;
+                    final address = booking.address;
+                    if (!hasCoords && address.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('No address or location to navigate to'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                      return;
+                    }
+                    final String url = hasCoords
+                        ? 'https://www.google.com/maps?q=${booking.latitude},${booking.longitude}'
+                        : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(address)}';
+                    final uri = Uri.parse(url);
+                    try {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Could not open maps. Address: $address'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
                   },
                   icon: const Icon(Icons.directions_rounded, size: 18),
                   label: const Text('Navigate'),
