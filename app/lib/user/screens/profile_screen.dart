@@ -18,11 +18,12 @@ import 'static/privacy_screen.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  static const String _name = 'User Name';
-  static const String _phone = '+91 98765 43210';
-
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+    final displayName = auth.userName.isNotEmpty ? auth.userName : 'User';
+    final phone = auth.phone;
+    final phoneDisplay = phone.length >= 10 ? '+91 ${phone.substring(0, 5)} ${phone.substring(5)}' : phone;
     return Scaffold(
       backgroundColor: AppTheme.bgLight,
       appBar: AppBar(
@@ -58,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                     radius: 44,
                     backgroundColor: AppTheme.primary.withOpacity(0.12),
                     child: Text(
-                      _name.substring(0, 1).toUpperCase(),
+                      displayName.substring(0, 1).toUpperCase(),
                       style: AppTheme.headingStyle().copyWith(
                         fontSize: 34,
                         color: AppTheme.primary,
@@ -68,11 +69,11 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    _name,
+                    displayName,
                     style: AppTheme.headingStyle().copyWith(fontSize: 20),
                   ),
                   const SizedBox(height: 6),
-                  Text(_phone, style: AppTheme.bodyStyle().copyWith(fontSize: 14)),
+                  Text(phoneDisplay, style: AppTheme.bodyStyle().copyWith(fontSize: 14)),
                   const SizedBox(height: 12),
                   Consumer<UserAddressProvider>(
                     builder: (context, addr, _) => Text(

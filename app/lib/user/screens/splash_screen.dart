@@ -9,6 +9,7 @@ import '../../core/providers/nav_provider.dart';
 import 'login_screen.dart';
 import 'main_shell.dart';
 import 'onboarding_screen.dart';
+import 'create_profile_screen.dart';
 import '../../worker/worker_shell.dart';
 
 /// Splash – logo, tagline, 2–3 sec then redirect (auth check → Login / User / Worker)
@@ -33,11 +34,14 @@ class _SplashScreenState extends State<SplashScreen> {
     final roleIndex = prefs.getInt(AuthProvider.keyRole);
     if (roleIndex != null && roleIndex >= 0 && roleIndex < AuthRole.values.length) {
       final role = AuthRole.values[roleIndex];
+      final profileCreated = role == AuthRole.user
+          ? (prefs.getBool(AuthProvider.keyProfileCreated) ?? false)
+          : true;
       context.read<NavProvider>().setIndex(0);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => role == AuthRole.user
-              ? const MainShell()
+              ? (profileCreated ? const MainShell() : const CreateProfileScreen())
               : const WorkerShell(),
         ),
       );
